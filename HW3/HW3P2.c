@@ -6,13 +6,23 @@
 #include <math.h>                                             
 #include "../../rng.c"
 
-#define LAST         1000000L                   /* number of jobs processed */ 
+#define LAST         10000L                   /* number of jobs processed */ 
 #define START        0.0                      /* initial time             */ 
 
 long Equilikely (long a, long b){
 	return (a+ (long) ((b-a+ 1) * Random()));
 }
 
+
+long Geometric(double p)     
+/* ---------------------------------------------------
+ * generate an Geometric random variate, use 0.0 < p < 1.0 
+ * ---------------------------------------------------
+ *
+*/
+{
+return ((long) (log(1.0 - Random()) / log(p)));
+}
 
    double Exponential(double m)                 
 /* ---------------------------------------------------
@@ -39,7 +49,7 @@ long Equilikely (long a, long b){
  * generate the next arrival time
  * ------------------------------
  */ 
-{       
+{      
                                     
 
   arrival += Exponential(2.0);
@@ -53,7 +63,13 @@ long Equilikely (long a, long b){
  * ------------------------------
  */ 
 {
-  return (Uniform(1.0, 2.0));
+    long k;
+	double sum = 0.0;
+	long tasks = 1 + Geometric(0.9);
+	for (k = 0; k < tasks; k++){
+		sum += Uniform(0.1, 0.2);
+	}
+	return (sum);
 }
 
 
@@ -62,7 +78,12 @@ long Equilikely (long a, long b){
 
   time_t t;
 
+   FILE *f;
+   f = fopen("serviceTimesP2.txt", "a");
 
+
+    
+    
   for(int i = 0; i < 3; i++){
     //initialize random number generator
     long changeSeed = Equilikely(0.1, 1000);
@@ -95,8 +116,14 @@ long Equilikely (long a, long b){
 		sum.delay   += delay;
 		sum.wait    += wait;
 		sum.service += service;
+
+		if (i == 0){
+			fprintf(f, "%6.2f\n", service);
+		}
 	} 
 	sum.interarrival = arrival - START;
+
+
 
 	long *seedUsed = malloc(sizeof(long));
 	GetSeed(seedUsed);
@@ -112,5 +139,6 @@ long Equilikely (long a, long b){
 	printf("\n");
 	free(seedUsed);
 	}
+	fclose(f);
   return (0);
 }

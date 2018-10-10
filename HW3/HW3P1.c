@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>  
-#include "../rng.c"
+#include "../../rng.c"
 
 const int MAX_SIM = 0x0FFFFFFF;
 int simnum = 0; //number of the simulation
