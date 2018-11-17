@@ -1,5 +1,7 @@
 /*
  * Monte-Carlo simulation of the game tic tac toe with two players placing at random
+ * Included is a calculated axiomatic probability for tic tac toe
+ * @author Andrew Katson
  */
 
 #include <stdio.h>
@@ -10,7 +12,7 @@
 #include "../rngs.h"
 
 #define START 0 
-#define END 255168  //number of simulated games 
+#define END 10000000  //number of simulated games 
 
 double Equilikely (double a, double b){
   /* ---------------------------------------------------
@@ -117,6 +119,7 @@ void simTicTacToe(){
 	for(int seed = 0; seed < 3; seed++){
 		PutSeed(time(&t));
 		double stream1 = (double)2*seed;
+		double stream2 = (double)2*seed+1;
 
 		//ties, and wins by either player
 		int numTies = 0;
@@ -139,15 +142,17 @@ void simTicTacToe(){
 				//use different streams for the random row and column chosen to 
 				//make them independent
 				SelectStream(stream1);
-				int randChoice = (int) Equilikely(0,8);
-				int randRow = randChoice / 3;
-				int randCol = randChoice % 3;
+				int randRow = (int) Equilikely(0,2);
+				SelectStream(stream2);
+				int randCol = (int) Equilikely(0,2);
 
 				//pick a random spot until we find a random row and column space that is unoccupied 
 				while(board[randRow][randCol] != 'n'){	
-					randChoice = (int) Equilikely(0,8);
-					randRow = randChoice / 3;
-					randCol = randChoice % 3;
+					SelectStream(stream1);
+					randRow = (int) Equilikely(0,2);
+					SelectStream(stream2);
+					randCol = (int) Equilikely(0,2);
+
 				}
 
 				//place the piece 

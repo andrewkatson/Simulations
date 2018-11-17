@@ -140,8 +140,8 @@
             if (number < CAPACITY){
               number++;
               if (number == 1)
-                t.completion = t.current + GetServiceE(employees[employeeNum].serviceTime);
-                //t.completion = t.current + GetService(employees[employeeNum].serviceTimeA, employees[employeeNum].serviceTimeB);
+                //t.completion = t.current + GetServiceE(employees[employeeNum].serviceTime);
+                t.completion = t.current + GetService(employees[employeeNum].serviceTimeA, employees[employeeNum].serviceTimeB);
             }
             else
               reject++;
